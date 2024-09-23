@@ -80,7 +80,7 @@ def calculate_surplus_data(sales_row):
     
     surplus_data = []
     for stock, sales in zip(stock_row, sales_row):
-        surplus = int(stock) - sales
+        surplus = int(stock) - int(sales)  # Convert stock and sales to integers
         surplus_data.append(surplus)
 
     return surplus_data
@@ -101,6 +101,7 @@ def get_last_5_entries_sales():
 
     return columns
 
+
 def calculate_stock_data(data):
     """
     Calculate the average stock for each item type, adding 10%
@@ -116,9 +117,10 @@ def calculate_stock_data(data):
 
     return new_stock_data
 
+
 def main():
     """
-    Run all program functions
+    Run all program functions and return calculated stock data
     """
     data = get_sales_data()
     sales_data = [int(num) for num in data]
@@ -128,8 +130,23 @@ def main():
     sales_columns = get_last_5_entries_sales()
     stock_data = calculate_stock_data(sales_columns)
     update_worksheet(stock_data, "stock")
+    
+    return stock_data  # Return stock_data from the main function
 
 
 print("Welcome to Love Sandwiches Data Automation")
-main()
+stock_data = main()
 
+def get_stock_values(data):
+    """
+    Print out the calculated stock numbers for each sandwich type.
+    """
+    headings = SHEET.worksheet("stock").get_all_values()[0]
+
+    print("Make the following numbers of sandwiches for next market:\n")
+    
+    return {heading: stock for heading, stock in zip(headings, data)}  # Fix variable names for clarity
+
+# Now `stock_values` will receive the correct stock_data
+stock_values = get_stock_values(stock_data)
+print(stock_values)
